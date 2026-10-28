@@ -1,0 +1,6 @@
+{
+  "name": "Rattan Pães - PDV & KDS",
+  "description": "Rattan Pães - Sistema de Caixa (PDV) e Produção (KDS) para Cinnamon Roll, Fatia Húngara, Bebidas Frias e Bebidas Quentes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
