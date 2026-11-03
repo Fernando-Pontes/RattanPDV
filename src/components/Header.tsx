@@ -29,7 +29,7 @@ export const Header: React.FC = () => {
     simulateSampleOrder,
     isFirebase,
   } = useFoodTruck();
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, isManager } = useAuth();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -69,12 +69,16 @@ export const Header: React.FC = () => {
       description: 'Painel de senhas prontas',
       icon: Tv,
     },
-    {
-      id: 'menu' as const,
-      label: 'Cardápio & Estoque',
-      description: 'Gestão de sandubas, rolls e chips',
-      icon: UtensilsCrossed,
-    },
+    ...(isManager
+      ? [
+          {
+            id: 'menu' as const,
+            label: 'Cardápio & Estoque',
+            description: 'Gestão de sandubas, rolls e chips',
+            icon: UtensilsCrossed,
+          },
+        ]
+      : []),
     {
       id: 'reports' as const,
       label: 'Fechamento de Caixa',

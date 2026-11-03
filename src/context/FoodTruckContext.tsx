@@ -85,6 +85,7 @@ interface FoodTruckContextType {
   updateProductPrice: (productId: string, newPrice: number) => void;
   updateProductImage: (productId: string, newImage: string) => void;
   addProduct: (product: Omit<Product, 'id'>) => void;
+  deleteProduct: (productId: string) => void;
   // Stats
   dailySummary: DailySummary;
   resetDemoData: () => void;
@@ -455,6 +456,11 @@ export const FoodTruckProvider: React.FC<{ children: ReactNode }> = ({ children 
     _persistProducts([...products, newProd]);
   };
 
+  const deleteProduct = (productId: string) => {
+    soundManager.playTap();
+    _persistProducts(products.filter(p => p.id !== productId));
+  };
+
   // ─── Category management ──────────────────────────────────────────────────
 
   const _persistCategories = (updated: Category[]) => {
@@ -632,7 +638,7 @@ export const FoodTruckProvider: React.FC<{ children: ReactNode }> = ({ children 
         addToCart, updateCartItemQty, updateCartItemNotes, removeFromCart, clearCart,
         cartSubtotal, cartTotal,
         checkoutOrder, updateOrderStatus, callOrder, cancelOrder,
-        toggleProductAvailability, updateProductPrice, updateProductImage, addProduct,
+        toggleProductAvailability, updateProductPrice, updateProductImage, addProduct, deleteProduct,
         dailySummary,
         resetDemoData, simulateSampleOrder,
       }}

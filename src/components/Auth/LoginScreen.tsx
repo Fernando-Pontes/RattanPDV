@@ -46,6 +46,12 @@ export const LoginScreen: React.FC = () => {
     setErrorMessage(null);
   };
 
+  const handleFillGislaine = () => {
+    setUsername('gislaine');
+    setPassword('123456');
+    setErrorMessage(null);
+  };
+
   return (
     <div className="min-h-screen bg-stone-950 flex flex-col justify-center items-center px-4 py-8 relative overflow-hidden">
       {/* Background ambient lighting */}
@@ -178,16 +184,26 @@ export const LoginScreen: React.FC = () => {
 
           {/* Quick preset & Firebase hint */}
           <div className="mt-6 pt-5 border-t border-stone-800/80 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-stone-400 font-medium">Usuário pré-configurado:</span>
-              <button
-                type="button"
-                onClick={handleFillGuilherme}
-                className="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1 hover:underline cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Preencher Guilherme</span>
-              </button>
+            <div className="space-y-2">
+              <span className="text-xs text-stone-400 font-medium block">Acesso rápido aos operadores:</span>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={handleFillGuilherme}
+                  className="px-2.5 py-2 rounded-xl bg-stone-950 border border-stone-800 hover:border-amber-400/60 text-xs text-stone-300 hover:text-white flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span className="font-semibold truncate">Guilherme (Gerente)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleFillGislaine}
+                  className="px-2.5 py-2 rounded-xl bg-stone-950 border border-stone-800 hover:border-emerald-400/60 text-xs text-stone-300 hover:text-white flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span className="font-semibold truncate">Gislaine (Operadora)</span>
+                </button>
+              </div>
             </div>
 
             <div className="bg-stone-950/60 p-3 rounded-xl border border-stone-800/80 text-[11px] text-stone-400 space-y-1.5">
@@ -195,10 +211,10 @@ export const LoginScreen: React.FC = () => {
                 <Info className="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-stone-300 font-medium">
-                    Operador Inicial: <span className="font-mono text-amber-300">guilherme</span>
+                    Operadores: <span className="font-mono text-amber-300">guilherme</span> (Gerente) e <span className="font-mono text-emerald-300">gislaine</span> (Operadora de Caixa)
                   </p>
                   <p className="text-stone-500 text-[10px] mt-0.5">
-                    Você pode inserir novos operadores diretamente no Firestore (coleção <span className="font-mono text-stone-400">users</span>).
+                    Gislaine acessa PDV, KDS e Relatórios, mas não visualiza "Cardápio & Estoque".
                   </p>
                 </div>
               </div>

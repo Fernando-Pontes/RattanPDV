@@ -15,8 +15,14 @@ import { MenuManagementView } from './components/Menu/MenuManagementView';
 import { CashierReportsView } from './components/Reports/CashierReportsView';
 
 const AppContent: React.FC = () => {
-  const { activeView } = useFoodTruck();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { activeView, setActiveView } = useFoodTruck();
+  const { isAuthenticated, isLoading, isManager } = useAuth();
+
+  React.useEffect(() => {
+    if (activeView === 'menu' && !isManager) {
+      setActiveView('pdv');
+    }
+  }, [activeView, isManager, setActiveView]);
 
   if (isLoading) {
     return (
@@ -42,7 +48,7 @@ const AppContent: React.FC = () => {
         {activeView === 'pdv' && <PDVView />}
         {activeView === 'kds' && <KDSView />}
         {activeView === 'tv' && <CustomerTVView />}
-        {activeView === 'menu' && <MenuManagementView />}
+        {activeView === 'menu' && isManager && <MenuManagementView />}
         {activeView === 'reports' && <CashierReportsView />}
       </main>
     </div>
