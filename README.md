@@ -83,14 +83,14 @@ A aplicação unifica em uma interface única e intuitiva todas as etapas do ate
 
 ### 7. 🔒 Autenticação & Controle de Acesso de Operadores
 - **Tela de Login Dedicada:** Acesso restrito ao PDV, KDS, estoque e relatórios financeiros, garantindo segurança na operação.
-- **Operador Padrão:** Usuário `guilherme` pré-configurado (senha padrão `123456`).
+- **Operador Padrão:** Usuário `guilherme` pré-configurado para inicialização e operação do sistema.
 - **Identificação em Comandas:** Nome e cargo do operador em serviço impressos automaticamente no cupom/comanda térmica de 80mm.
 - **Inserção Direta via Firebase Firestore:** Para adicionar novos operadores pelo console do Firebase:
   - Coleção: `users`
   - Campos do documento:
     - `username` (ou `usuario`): string (ex.: `"guilherme"`, `"mariana"`)
-    - `password` (ou `senha`): string (ex.: `"123456"`)
-    - `name` (ou `nome`): string (ex.: `"Guilherme"`)
+    - `password` (ou `senha`): string (senha de acesso definida pelo administrador)
+    - `name` (ou `nome`): string (ex.: `"Guilherme"`, `"Mariana Silva"`)
     - `role` (ou `cargo`): string (ex.: `"Gerente"`, `"Operador de Caixa"`)
     - `active` (ou `ativo`): boolean (`true`)
 

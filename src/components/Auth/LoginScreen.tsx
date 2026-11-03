@@ -195,8 +195,7 @@ export const LoginScreen: React.FC = () => {
                 <Info className="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-stone-300 font-medium">
-                    Operador: <span className="font-mono text-amber-300">guilherme</span> | Senha:{' '}
-                    <span className="font-mono text-amber-300">123456</span>
+                    Operador Inicial: <span className="font-mono text-amber-300">guilherme</span>
                   </p>
                   <p className="text-stone-500 text-[10px] mt-0.5">
                     Você pode inserir novos operadores diretamente no Firestore (coleção <span className="font-mono text-stone-400">users</span>).
