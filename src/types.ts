@@ -1,3 +1,11 @@
+export interface SystemUser {
+  id: string;
+  name: string;
+  username: string;
+  role?: string;
+  active?: boolean;
+}
+
 export type CategoryId = string;
 
 export interface Category {

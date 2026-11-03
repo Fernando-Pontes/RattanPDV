@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useFoodTruck } from '../context/FoodTruckContext';
+import { useAuth } from '../context/AuthContext';
 import {
   Volume2,
   VolumeX,
@@ -14,6 +15,8 @@ import {
   ChevronRight,
   Cloud,
   HardDrive,
+  LogOut,
+  User,
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -26,6 +29,7 @@ export const Header: React.FC = () => {
     simulateSampleOrder,
     isFirebase,
   } = useFoodTruck();
+  const { currentUser, logout } = useAuth();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -163,12 +167,41 @@ export const Header: React.FC = () => {
           <button
             onClick={simulateSampleOrder}
             title="Simula um novo pedido chegando do balcão"
-            className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-[#A91D22] hover:bg-[#8e161c] rounded-lg shadow-sm transition-all active:scale-[0.98] whitespace-nowrap flex items-center gap-1.5"
+            className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-[#A91D22] hover:bg-[#8e161c] rounded-lg shadow-sm transition-all active:scale-[0.98] whitespace-nowrap flex items-center gap-1.5 cursor-pointer"
           >
             <PlusCircle className="w-3.5 h-3.5 shrink-0" />
             <span className="hidden sm:inline">Simular Pedido</span>
             <span className="sm:hidden">Simular</span>
           </button>
+
+          {/* Current Operator Profile & Logout (Desktop) */}
+          {currentUser && (
+            <div className="hidden md:flex items-center gap-2 pl-2 border-l border-stone-800">
+              <div
+                title={`Operador logado: ${currentUser.name} (${currentUser.username})`}
+                className="w-8 h-8 rounded-lg bg-red-950/70 border border-red-800/50 flex items-center justify-center text-red-200 font-bold text-xs uppercase shadow-sm"
+              >
+                {currentUser.name.charAt(0) || 'O'}
+              </div>
+              <div className="text-left text-xs leading-tight">
+                <span className="block font-semibold text-stone-200 truncate max-w-[90px] sm:max-w-[120px]">
+                  {currentUser.name}
+                </span>
+                <span className="block text-[10px] text-stone-400 font-mono">
+                  {currentUser.role || 'Operador'}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={logout}
+                title="Sair / Trocar Operador"
+                className="p-1.5 rounded-lg border border-stone-800 bg-stone-900 hover:bg-red-950/80 hover:border-red-900/60 text-stone-400 hover:text-red-300 transition-colors cursor-pointer"
+                aria-label="Sair do sistema"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
 
           {/* Hamburger Menu Toggle Button (Visible on screens smaller than xl) */}
           <button
@@ -217,6 +250,37 @@ export const Header: React.FC = () => {
                   Rattan Pães de Levain
                 </span>
               </div>
+
+              {/* Operator info in drawer */}
+              {currentUser && (
+                <div className="p-3 bg-stone-900/90 rounded-xl border border-stone-800 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-red-950/80 border border-red-800/60 flex items-center justify-center text-red-200 font-bold text-sm uppercase">
+                      {currentUser.name.charAt(0) || 'O'}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-sm font-bold text-white">{currentUser.name}</span>
+                        <span className="text-[10px] bg-stone-800 text-stone-300 px-1.5 py-0.5 rounded font-mono">
+                          {currentUser.username}
+                        </span>
+                      </div>
+                      <span className="text-xs text-stone-400">{currentUser.role || 'Operador'}</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      logout();
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-red-950/60 hover:bg-red-900/60 border border-red-800/50 text-red-300 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Sair</span>
+                  </button>
+                </div>
+              )}
 
               {/* Navigation Items List */}
               <div className="grid gap-2">

@@ -81,7 +81,20 @@ A aplicação unifica em uma interface única e intuitiva todas as etapas do ate
 - Layout fluido para tablets de caixa (iPad / Android), computadores desktop e celulares.
 - Menu de navegação responsivo em gaveta lateral (*Hamburger Menu*) que impede sobreposição de botões em telas pequenas ou visualizações verticais.
 
-### 7. 🔄 Sincronização em Tempo Real
+### 7. 🔒 Autenticação & Controle de Acesso de Operadores
+- **Tela de Login Dedicada:** Acesso restrito ao PDV, KDS, estoque e relatórios financeiros, garantindo segurança na operação.
+- **Operador Padrão:** Usuário `guilherme` pré-configurado (senha padrão `123456`).
+- **Identificação em Comandas:** Nome e cargo do operador em serviço impressos automaticamente no cupom/comanda térmica de 80mm.
+- **Inserção Direta via Firebase Firestore:** Para adicionar novos operadores pelo console do Firebase:
+  - Coleção: `users`
+  - Campos do documento:
+    - `username` (ou `usuario`): string (ex.: `"guilherme"`, `"mariana"`)
+    - `password` (ou `senha`): string (ex.: `"123456"`)
+    - `name` (ou `nome`): string (ex.: `"Guilherme"`)
+    - `role` (ou `cargo`): string (ex.: `"Gerente"`, `"Operador de Caixa"`)
+    - `active` (ou `ativo`): boolean (`true`)
+
+### 8. 🔄 Sincronização em Tempo Real
 - Comunicação instantânea entre telas e abas no mesmo navegador via `BroadcastChannel`.
 - Arquitetura desacoplada e compatível com persistência em nuvem (Firebase Firestore).
 

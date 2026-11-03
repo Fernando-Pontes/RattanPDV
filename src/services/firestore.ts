@@ -26,13 +26,14 @@ import {
   getDocs,
 } from 'firebase/firestore';
 import { db } from '../firebase';
-import { Order, Product, Category } from '../types';
+import { Order, Product, Category, SystemUser } from '../types';
 
 // ─── Collection refs ────────────────────────────────────────────────────────
 
 const ordersCol     = () => collection(db!, 'orders');
 const productsCol   = () => collection(db!, 'products');
 const categoriesCol = () => collection(db!, 'categories');
+const usersCol      = () => collection(db!, 'users');
 const metaDoc       = () => doc(db!, 'meta', 'state');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -217,5 +218,90 @@ export async function seedIfEmpty(
   }
 
   await batch.commit();
+}
+
+// ─── User Management ────────────────────────────────────────────────────────
+
+/**
+ * Ensures default user 'guilherme' exists in Firestore.
+ */
+export async function seedDefaultUserIfEmpty(): Promise<void> {
+  try {
+    const userDocRef = doc(usersCol(), 'guilherme');
+    const snap = await getDoc(userDocRef);
+
+    if (!snap.exists()) {
+      await setDoc(userDocRef, {
+        username: 'guilherme',
+        name: 'Guilherme',
+        password: '123456',
+        role: 'Administrador / Operador',
+        active: true,
+        createdAt: new Date().toISOString(),
+      });
+    }
+  } catch (err) {
+    console.warn('Could not seed default user in Firestore (may be offline or restricted):', err);
+  }
+}
+
+/**
+ * Validates credentials against Firestore 'users' collection.
+ * Flexible enough to match Portuguese or English field names:
+ * (username/usuario/login/email, password/senha/pin, name/nome, role/cargo).
+ */
+export async function validateUserInFirestore(
+  usernameInput: string,
+  passwordInput: string
+): Promise<SystemUser | null> {
+  const cleanUser = usernameInput.trim().toLowerCase();
+  const cleanPass = passwordInput.trim();
+
+  try {
+    // 1. First check if document exists with id matching the username directly
+    const directDocRef = doc(usersCol(), cleanUser);
+    const directSnap = await getDoc(directDocRef);
+
+    if (directSnap.exists()) {
+      const data = directSnap.data();
+      const u = (data.username || data.usuario || data.login || data.email || directSnap.id).toString().trim().toLowerCase();
+      const p = (data.password || data.senha || data.pin || '').toString().trim();
+      const isActive = data.active !== false && data.ativo !== false;
+
+      if ((u === cleanUser || directSnap.id.toLowerCase() === cleanUser) && p === cleanPass && isActive) {
+        return {
+          id: directSnap.id,
+          name: data.name || data.nome || data.displayName || 'Guilherme',
+          username: u || cleanUser,
+          role: data.role || data.cargo || data.funcao || 'Operador',
+          active: true,
+        };
+      }
+    }
+
+    // 2. Scan all documents in 'users' collection
+    const querySnapshot = await getDocs(usersCol());
+    for (const d of querySnapshot.docs) {
+      const data = d.data();
+      const u = (data.username || data.usuario || data.login || data.email || d.id).toString().trim().toLowerCase();
+      const p = (data.password || data.senha || data.pin || '').toString().trim();
+      const isActive = data.active !== false && data.ativo !== false;
+
+      if ((u === cleanUser || d.id.toLowerCase() === cleanUser) && p === cleanPass && isActive) {
+        return {
+          id: d.id,
+          name: data.name || data.nome || data.displayName || 'Operador',
+          username: u || cleanUser,
+          role: data.role || data.cargo || data.funcao || 'Operador',
+          active: true,
+        };
+      }
+    }
+  } catch (err) {
+    console.error('Error querying users collection in Firestore:', err);
+    throw err;
+  }
+
+  return null;
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Order } from '../../types';
+import { useAuth } from '../../context/AuthContext';
 import { Printer, X, CheckCircle2 } from 'lucide-react';
 
 interface ReceiptModalProps {
@@ -8,6 +9,7 @@ interface ReceiptModalProps {
 }
 
 export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) => {
+  const { currentUser } = useAuth();
   const handlePrint = () => {
     window.print();
   };
@@ -144,7 +146,12 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
             <div className="pt-3 text-center space-y-1 text-[10px] text-slate-600">
               <p className="font-bold text-slate-800">Acompanhe seu pedido no painel de chamada!</p>
               <p>Obrigado pela preferência e bom apetite!</p>
-              <p className="text-[8px] text-slate-400 pt-1 font-mono">TruckFlow Sistema de Gestão</p>
+              {currentUser && (
+                <p className="text-[9px] text-slate-500 font-mono">
+                  Atendido por: {currentUser.name} ({currentUser.role || 'Caixa'})
+                </p>
+              )}
+              <p className="text-[8px] text-slate-400 pt-1 font-mono">Rattan Pães · Sistema de Gestão</p>
             </div>
           </div>
         </div>
