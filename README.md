@@ -83,7 +83,7 @@ A aplicação unifica em uma interface única e intuitiva todas as etapas do ate
 
 ### 7. 🔒 Autenticação & Controle de Acesso de Operadores (RBAC)
 - **Tela de Login Dedicada:** Acesso restrito ao PDV, KDS, estoque e relatórios financeiros, garantindo segurança na operação.
-- **Operador Padrão:** Usuário `guilherme` pré-configurado com o papel de **`Gerente`** para inicialização e operação do sistema.
+- **Operadores do Sistema:** Usuário `guilherme` pré-configurado como **`Gerente`** e usuária `gislaine` pré-configurada como **`Operadora de Caixa`** (role *"operadora"*).
 - **Restrição de Acesso ao Cardápio & Estoque:**
   - Apenas operadores com role **`Gerente`** têm acesso ao módulo "Cardápio & Estoque" no menu superior e no menu mobile, com permissão exclusiva para **inclusão, alteração (preços, fotos, disponibilidade) e exclusão** de itens e categorias.
   - Usuários com papéis operacionais (ex.: *"Caixa"*, *"Operador"*) não visualizam a opção "Cardápio & Estoque" no menu de navegação e têm o acesso bloqueado a alterações.

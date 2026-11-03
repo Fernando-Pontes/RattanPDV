@@ -223,15 +223,15 @@ export async function seedIfEmpty(
 // ─── User Management ────────────────────────────────────────────────────────
 
 /**
- * Ensures default user 'guilherme' exists in Firestore.
+ * Ensures default users 'guilherme' and 'gislaine' exist in Firestore.
  */
 export async function seedDefaultUserIfEmpty(): Promise<void> {
   try {
-    const userDocRef = doc(usersCol(), 'guilherme');
-    const snap = await getDoc(userDocRef);
+    const guilhermeRef = doc(usersCol(), 'guilherme');
+    const guilhermeSnap = await getDoc(guilhermeRef);
 
-    if (!snap.exists()) {
-      await setDoc(userDocRef, {
+    if (!guilhermeSnap.exists()) {
+      await setDoc(guilhermeRef, {
         username: 'guilherme',
         name: 'Guilherme',
         password: '123456',
@@ -240,8 +240,22 @@ export async function seedDefaultUserIfEmpty(): Promise<void> {
         createdAt: new Date().toISOString(),
       });
     }
+
+    const gislaineRef = doc(usersCol(), 'gislaine');
+    const gislaineSnap = await getDoc(gislaineRef);
+
+    if (!gislaineSnap.exists()) {
+      await setDoc(gislaineRef, {
+        username: 'gislaine',
+        name: 'Gislaine',
+        password: '123456',
+        role: 'Operadora',
+        active: true,
+        createdAt: new Date().toISOString(),
+      });
+    }
   } catch (err) {
-    console.warn('Could not seed default user in Firestore (may be offline or restricted):', err);
+    console.warn('Could not seed default users in Firestore (may be offline or restricted):', err);
   }
 }
 

@@ -15,14 +15,23 @@ interface AuthContextType {
 
 const AUTH_STORAGE_KEY = 'rattan_authenticated_user_v1';
 
-// Default system user as requested
-const DEFAULT_USER: SystemUser = {
-  id: 'user_guilherme',
-  name: 'Guilherme',
-  username: 'guilherme',
-  role: 'Gerente',
-  active: true,
-};
+// Built-in system users
+const BUILT_IN_USERS: SystemUser[] = [
+  {
+    id: 'user_guilherme',
+    name: 'Guilherme',
+    username: 'guilherme',
+    role: 'Gerente',
+    active: true,
+  },
+  {
+    id: 'user_gislaine',
+    name: 'Gislaine',
+    username: 'gislaine',
+    role: 'Operadora',
+    active: true,
+  },
+];
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -47,10 +56,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsLoading(false);
     }
 
-    // If Firebase is active, ensure the default user 'guilherme' exists in Firestore
+    // If Firebase is active, ensure default users exist in Firestore
     if (isFirebaseActive) {
       seedDefaultUserIfEmpty().catch(err => {
-        console.warn('Background seed of default user failed:', err);
+        console.warn('Background seed of default users failed:', err);
       });
     }
   }, [isFirebaseActive]);
@@ -83,28 +92,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     }
 
-    // 2. Built-in check for user "Guilherme" (supports username 'guilherme' with default passwords)
-    const isGuilhermeUsername = cleanUser.toLowerCase() === 'guilherme';
-    const isGuilhermePassword =
-      cleanPass === '123456' ||
-      cleanPass === 'rattan123' ||
-      cleanPass.toLowerCase() === 'guilherme';
+    // 2. Built-in check for standard users (Guilherme and Gislaine)
+    const matchedBuiltIn = BUILT_IN_USERS.find(
+      u => u.username.toLowerCase() === cleanUser.toLowerCase()
+    );
 
-    if (isGuilhermeUsername && isGuilhermePassword) {
-      setCurrentUser(DEFAULT_USER);
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(DEFAULT_USER));
+    if (matchedBuiltIn) {
+      const isDefaultPassword =
+        cleanPass === '123456' ||
+        cleanPass === 'rattan123' ||
+        cleanPass.toLowerCase() === matchedBuiltIn.username.toLowerCase();
 
-      // Attempt to save to Firestore in background if configured
-      if (isFirebaseActive) {
-        seedDefaultUserIfEmpty().catch(() => {});
+      if (isDefaultPassword) {
+        setCurrentUser(matchedBuiltIn);
+        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(matchedBuiltIn));
+
+        // Attempt to save to Firestore in background if configured
+        if (isFirebaseActive) {
+          seedDefaultUserIfEmpty().catch(() => {});
+        }
+
+        return { success: true };
       }
-
-      return { success: true };
     }
 
     return {
       success: false,
-      error: 'Usuário ou senha incorretos. Verifique suas credenciais no Firebase ou use o operador padrão.',
+      error: 'Usuário ou senha incorretos. Verifique suas credenciais no Firebase ou use os operadores do sistema.',
     };
   };
 
