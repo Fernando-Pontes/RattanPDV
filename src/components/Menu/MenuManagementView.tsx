@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useFoodTruck } from '../../context/FoodTruckContext';
+import { useAuth } from '../../context/AuthContext';
 import { Product, CategoryId } from '../../types';
 import { IMAGES, MENU_ORIGINAL_CARD, MENU_LEVAIN_CARD } from '../../mockData';
 import {
@@ -16,6 +17,7 @@ import {
   Camera,
   RefreshCw,
   FileText,
+  ShieldAlert,
 } from 'lucide-react';
 
 export const MenuManagementView: React.FC = () => {
@@ -29,7 +31,9 @@ export const MenuManagementView: React.FC = () => {
     updateProductPrice,
     updateProductImage,
     addProduct,
+    deleteProduct,
   } = useFoodTruck();
+  const { isManager } = useAuth();
 
   const [activeCategory, setActiveCategory] = useState<CategoryId | 'all'>('all');
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
@@ -66,11 +70,16 @@ export const MenuManagementView: React.FC = () => {
     : products.filter(p => p.category === activeCategory);
 
   const handleStartEditPrice = (product: Product) => {
+    if (!isManager) {
+      alert('Apenas usuários com o perfil "Gerente" podem alterar preços e dados do cardápio.');
+      return;
+    }
     setEditingPriceId(product.id);
     setTempPrice(product.price.toString());
   };
 
   const handleSavePrice = (productId: string) => {
+    if (!isManager) return;
     const parsed = parseFloat(tempPrice.replace(',', '.'));
     if (!isNaN(parsed) && parsed > 0) {
       updateProductPrice(productId, parsed);
@@ -78,7 +87,29 @@ export const MenuManagementView: React.FC = () => {
     setEditingPriceId(null);
   };
 
+  const handleToggleAvailability = (productId: string) => {
+    if (!isManager) {
+      alert('Apenas usuários com o perfil "Gerente" podem alterar a disponibilidade dos itens.');
+      return;
+    }
+    toggleProductAvailability(productId);
+  };
+
+  const handleDeleteProduct = (productId: string, productName: string) => {
+    if (!isManager) {
+      alert('Apenas usuários com o perfil "Gerente" podem excluir itens do cardápio.');
+      return;
+    }
+    if (window.confirm(`Deseja realmente excluir "${productName}" do cardápio?`)) {
+      deleteProduct(productId);
+    }
+  };
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, isEditingExisting = false) => {
+    if (!isManager) {
+      alert('Apenas usuários com o perfil "Gerente" podem alterar fotos de itens.');
+      return;
+    }
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -98,6 +129,10 @@ export const MenuManagementView: React.FC = () => {
 
   const handleCreateProduct = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isManager) {
+      alert('Apenas usuários com o perfil "Gerente" podem cadastrar novos itens no cardápio.');
+      return;
+    }
     const parsed = parseFloat(newPrice.replace(',', '.'));
     if (!newName.trim() || isNaN(parsed) || parsed <= 0) return;
 
@@ -132,16 +167,29 @@ export const MenuManagementView: React.FC = () => {
 
   const handleAddCategorySubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isManager) {
+      alert('Apenas usuários com o perfil "Gerente" podem adicionar categorias.');
+      return;
+    }
     if (!newCategoryName.trim()) return;
     addCategory(newCategoryName.trim());
     setNewCategoryName('');
   };
 
   const handleSaveCategoryName = (id: string) => {
+    if (!isManager) return;
     if (!editingCategoryName.trim()) return;
     updateCategory(id, editingCategoryName.trim());
     setEditingCategoryId(null);
     setEditingCategoryName('');
+  };
+
+  const handleDeleteCategory = (id: string) => {
+    if (!isManager) {
+      alert('Apenas usuários com o perfil "Gerente" podem excluir categorias.');
+      return;
+    }
+    deleteCategory(id);
   };
 
   const galleryPresets = [
@@ -172,36 +220,45 @@ export const MenuManagementView: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsOriginalCardOpen(true)}
-            className="px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-[#A91D22] text-slate-200 hover:text-white font-semibold rounded-xl text-xs flex items-center gap-2 transition-all active:scale-95"
+            className="px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-[#A91D22] text-slate-200 hover:text-white font-semibold rounded-xl text-xs flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
           >
             <FileText className="w-4 h-4 text-[#A91D22]" />
             <span>Cardápio Impresso</span>
           </button>
 
-          {/* Gerenciar Categorias Button */}
-          <button
-            onClick={() => setIsCategoriesModalOpen(true)}
-            className="px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 hover:text-white font-semibold rounded-xl text-xs flex items-center gap-2 transition-all active:scale-95"
-          >
-            <FolderTree className="w-4 h-4 text-amber-400" />
-            <span>Gerenciar Categorias</span>
-          </button>
+          {isManager ? (
+            <>
+              {/* Gerenciar Categorias Button */}
+              <button
+                onClick={() => setIsCategoriesModalOpen(true)}
+                className="px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 hover:text-white font-semibold rounded-xl text-xs flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
+              >
+                <FolderTree className="w-4 h-4 text-amber-400" />
+                <span>Gerenciar Categorias</span>
+              </button>
 
-          {/* Novo Item Button */}
-          <button
-            onClick={() => {
-              // Set initial image according to current category
-              if (activeCategory === 'portions') setNewImage(IMAGES.fries);
-              else if (activeCategory === 'drinks') setNewImage(IMAGES.drink);
-              else if (activeCategory === 'desserts') setNewImage(IMAGES.dessert);
-              else setNewImage(IMAGES.burger);
-              setIsAddModalOpen(true);
-            }}
-            className="px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-2 shadow-sm transition-all active:scale-95"
-          >
-            <Plus className="w-4 h-4 stroke-[3]" />
-            <span>Novo Item no Cardápio</span>
-          </button>
+              {/* Novo Item Button */}
+              <button
+                onClick={() => {
+                  // Set initial image according to current category
+                  if (activeCategory === 'portions') setNewImage(IMAGES.fries);
+                  else if (activeCategory === 'drinks') setNewImage(IMAGES.drink);
+                  else if (activeCategory === 'desserts') setNewImage(IMAGES.dessert);
+                  else setNewImage(IMAGES.burger);
+                  setIsAddModalOpen(true);
+                }}
+                className="px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-2 shadow-sm transition-all active:scale-95 cursor-pointer"
+              >
+                <Plus className="w-4 h-4 stroke-[3]" />
+                <span>Novo Item no Cardápio</span>
+              </button>
+            </>
+          ) : (
+            <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-medium">
+              <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+              <span>Modo Consulta (Restrito a Gerente)</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -234,14 +291,16 @@ export const MenuManagementView: React.FC = () => {
           );
         })}
 
-        <button
-          onClick={() => setIsCategoriesModalOpen(true)}
-          className="px-2.5 py-1.5 rounded-xl border border-dashed border-slate-700 hover:border-amber-400 text-slate-400 hover:text-amber-400 text-xs font-medium flex items-center gap-1 transition-colors whitespace-nowrap"
-          title="Adicionar ou editar categorias"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Editar Categorias</span>
-        </button>
+        {isManager && (
+          <button
+            onClick={() => setIsCategoriesModalOpen(true)}
+            className="px-2.5 py-1.5 rounded-xl border border-dashed border-slate-700 hover:border-amber-400 text-slate-400 hover:text-amber-400 text-xs font-medium flex items-center gap-1 transition-colors whitespace-nowrap cursor-pointer"
+            title="Adicionar ou editar categorias"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Editar Categorias</span>
+          </button>
+        )}
       </div>
 
       {/* Products Table */}
@@ -268,9 +327,12 @@ export const MenuManagementView: React.FC = () => {
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
                         <div
-                          onClick={() => setEditingImageProduct(product)}
-                          className="relative group cursor-pointer shrink-0"
-                          title="Clique para alterar a foto deste produto"
+                          onClick={() => {
+                            if (!isManager) return;
+                            setEditingImageProduct(product);
+                          }}
+                          className={`relative group shrink-0 ${isManager ? 'cursor-pointer' : 'cursor-default'}`}
+                          title={isManager ? 'Clique para alterar a foto deste produto' : product.name}
                         >
                           <img
                             src={product.image}
@@ -278,9 +340,11 @@ export const MenuManagementView: React.FC = () => {
                             referrerPolicy="no-referrer"
                             className="w-12 h-12 rounded-xl object-cover bg-slate-950 border border-slate-800 group-hover:border-amber-400 transition-all"
                           />
-                          <div className="absolute inset-0 bg-slate-950/70 rounded-xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-amber-400">
-                            <Camera className="w-4 h-4" />
-                          </div>
+                          {isManager && (
+                            <div className="absolute inset-0 bg-slate-950/70 rounded-xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-amber-400">
+                              <Camera className="w-4 h-4" />
+                            </div>
+                          )}
                         </div>
 
                         <div>
@@ -308,7 +372,7 @@ export const MenuManagementView: React.FC = () => {
 
                     {/* Price with Inline Edit */}
                     <td className="py-3.5 px-4 font-mono whitespace-nowrap">
-                      {editingPriceId === product.id ? (
+                      {isManager && editingPriceId === product.id ? (
                         <div className="flex items-center gap-1.5">
                           <input
                             type="text"
@@ -320,7 +384,7 @@ export const MenuManagementView: React.FC = () => {
                           />
                           <button
                             onClick={() => handleSavePrice(product.id)}
-                            className="p-1 rounded bg-amber-400 text-slate-950 hover:bg-amber-300"
+                            className="p-1 rounded bg-amber-400 text-slate-950 hover:bg-amber-300 cursor-pointer"
                           >
                             <Check className="w-3.5 h-3.5 stroke-[3]" />
                           </button>
@@ -328,11 +392,18 @@ export const MenuManagementView: React.FC = () => {
                       ) : (
                         <button
                           onClick={() => handleStartEditPrice(product)}
-                          className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 font-bold group"
-                          title="Clique para editar o preço"
+                          disabled={!isManager}
+                          className={`flex items-center gap-1.5 font-bold ${
+                            isManager
+                              ? 'text-amber-400 hover:text-amber-300 group cursor-pointer'
+                              : 'text-stone-300 cursor-default'
+                          }`}
+                          title={isManager ? 'Clique para editar o preço' : 'Preço de venda'}
                         >
                           <span>R$ {product.price.toFixed(2).replace('.', ',')}</span>
-                          <Edit2 className="w-3 h-3 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                          {isManager && (
+                            <Edit2 className="w-3 h-3 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                          )}
                         </button>
                       )}
                     </td>
@@ -340,8 +411,11 @@ export const MenuManagementView: React.FC = () => {
                     {/* Availability Toggle */}
                     <td className="py-3.5 px-4 text-center whitespace-nowrap">
                       <button
-                        onClick={() => toggleProductAvailability(product.id)}
+                        onClick={() => handleToggleAvailability(product.id)}
+                        disabled={!isManager}
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                          isManager ? 'cursor-pointer' : 'cursor-default'
+                        } ${
                           product.available
                             ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
                             : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
@@ -352,14 +426,27 @@ export const MenuManagementView: React.FC = () => {
                       </button>
                     </td>
 
-                    {/* Fast Toggle Action */}
+                    {/* Fast Toggle & Delete Action */}
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                      <button
-                        onClick={() => toggleProductAvailability(product.id)}
-                        className="text-xs text-slate-400 hover:text-white underline font-medium"
-                      >
-                        {product.available ? 'Pausar Vendas' : 'Ativar Item'}
-                      </button>
+                      {isManager ? (
+                        <div className="flex items-center justify-end gap-2.5">
+                          <button
+                            onClick={() => handleToggleAvailability(product.id)}
+                            className="text-xs text-slate-400 hover:text-white underline font-medium cursor-pointer"
+                          >
+                            {product.available ? 'Pausar Vendas' : 'Ativar Item'}
+                          </button>
+                          <button
+                            onClick={() => handleDeleteProduct(product.id, product.name)}
+                            className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-950/40 transition-colors cursor-pointer"
+                            title="Excluir item do cardápio"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-500 italic">Somente leitura</span>
+                      )}
                     </td>
 
                   </tr>
@@ -800,7 +887,7 @@ export const MenuManagementView: React.FC = () => {
                               type="button"
                               onClick={() => {
                                 if (confirm(`Deseja excluir a categoria "${cat.name}"? Os produtos vinculados serão movidos para outra categoria.`)) {
-                                  deleteCategory(cat.id);
+                                  handleDeleteCategory(cat.id);
                                 }
                               }}
                               className="p-1.5 rounded-lg bg-slate-900 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400"

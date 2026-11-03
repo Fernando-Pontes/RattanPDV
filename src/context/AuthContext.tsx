@@ -7,6 +7,7 @@ interface AuthContextType {
   currentUser: SystemUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isManager: boolean;
   login: (usernameInput: string, passwordInput: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   isFirebaseActive: boolean;
@@ -19,7 +20,7 @@ const DEFAULT_USER: SystemUser = {
   id: 'user_guilherme',
   name: 'Guilherme',
   username: 'guilherme',
-  role: 'Administrador / Operador',
+  role: 'Gerente',
   active: true,
 };
 
@@ -112,12 +113,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem(AUTH_STORAGE_KEY);
   };
 
+  const isManager = Boolean(
+    currentUser &&
+    currentUser.role &&
+    currentUser.role.trim().toLowerCase().includes('gerente')
+  );
+
   return (
     <AuthContext.Provider
       value={{
         currentUser,
         isAuthenticated: !!currentUser,
         isLoading,
+        isManager,
         login,
         logout,
         isFirebaseActive,

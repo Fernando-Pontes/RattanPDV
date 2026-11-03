@@ -235,7 +235,7 @@ export async function seedDefaultUserIfEmpty(): Promise<void> {
         username: 'guilherme',
         name: 'Guilherme',
         password: '123456',
-        role: 'Administrador / Operador',
+        role: 'Gerente',
         active: true,
         createdAt: new Date().toISOString(),
       });

@@ -81,9 +81,12 @@ A aplicação unifica em uma interface única e intuitiva todas as etapas do ate
 - Layout fluido para tablets de caixa (iPad / Android), computadores desktop e celulares.
 - Menu de navegação responsivo em gaveta lateral (*Hamburger Menu*) que impede sobreposição de botões em telas pequenas ou visualizações verticais.
 
-### 7. 🔒 Autenticação & Controle de Acesso de Operadores
+### 7. 🔒 Autenticação & Controle de Acesso de Operadores (RBAC)
 - **Tela de Login Dedicada:** Acesso restrito ao PDV, KDS, estoque e relatórios financeiros, garantindo segurança na operação.
-- **Operador Padrão:** Usuário `guilherme` pré-configurado para inicialização e operação do sistema.
+- **Operador Padrão:** Usuário `guilherme` pré-configurado com o papel de **`Gerente`** para inicialização e operação do sistema.
+- **Restrição de Acesso ao Cardápio & Estoque:**
+  - Apenas operadores com role **`Gerente`** têm acesso ao módulo "Cardápio & Estoque" no menu superior e no menu mobile, com permissão exclusiva para **inclusão, alteração (preços, fotos, disponibilidade) e exclusão** de itens e categorias.
+  - Usuários com papéis operacionais (ex.: *"Caixa"*, *"Operador"*) não visualizam a opção "Cardápio & Estoque" no menu de navegação e têm o acesso bloqueado a alterações.
 - **Identificação em Comandas:** Nome e cargo do operador em serviço impressos automaticamente no cupom/comanda térmica de 80mm.
 - **Inserção Direta via Firebase Firestore:** Para adicionar novos operadores pelo console do Firebase:
   - Coleção: `users`
@@ -91,7 +94,7 @@ A aplicação unifica em uma interface única e intuitiva todas as etapas do ate
     - `username` (ou `usuario`): string (ex.: `"guilherme"`, `"mariana"`)
     - `password` (ou `senha`): string (senha de acesso definida pelo administrador)
     - `name` (ou `nome`): string (ex.: `"Guilherme"`, `"Mariana Silva"`)
-    - `role` (ou `cargo`): string (ex.: `"Gerente"`, `"Operador de Caixa"`)
+    - `role` (ou `cargo`): string (ex.: `"Gerente"`, `"Operador"`, `"Caixa"`)
     - `active` (ou `ativo`): boolean (`true`)
 
 ### 8. 🔄 Sincronização em Tempo Real
