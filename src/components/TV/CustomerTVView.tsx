@@ -101,7 +101,7 @@ export const CustomerTVView: React.FC = () => {
                       {order.customerName}
                     </span>
                     <span className="text-[10px] text-slate-500 uppercase mt-0.5">
-                      {order.status === 'preparing' ? 'Na Chapa' : 'Na Fila'}
+                      {order.status === 'preparing' ? 'Em Preparo' : 'Na Fila'}
                     </span>
                   </div>
                 ))}

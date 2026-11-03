@@ -127,9 +127,10 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onPrintReceipt }) =
                   </p>
                 ))}
                 {item.customization?.notes && (
-                  <p className="italic text-slate-400">
-                    "{item.customization.notes}"
-                  </p>
+                  <div className="bg-amber-950/60 border border-amber-500/50 rounded px-2 py-1 text-xs text-amber-200 font-medium flex items-start gap-1.5 mt-0.5">
+                    <span className="font-bold text-amber-400 shrink-0">OBS:</span>
+                    <span className="font-semibold">{item.customization.notes}</span>
+                  </div>
                 )}
               </div>
             )}

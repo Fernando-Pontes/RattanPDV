@@ -111,13 +111,13 @@ export const KDSView: React.FC = () => {
           </div>
         </div>
 
-        {/* Column 2: Na Chapa (Preparing) */}
+        {/* Column 2: Em Preparo (Preparing) */}
         <div className="bg-slate-950/60 border border-slate-800 rounded-2xl flex flex-col overflow-hidden min-h-[500px]">
           <div className="p-3.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between sticky top-0 z-10">
             <div className="flex items-center gap-2">
               <Flame className="w-4 h-4 text-orange-500 fill-orange-500" />
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-                2. Na Chapa / Preparo
+                2. Em Preparo
               </h3>
             </div>
             <span className="px-2 py-0.5 rounded-md bg-orange-500/20 text-orange-300 font-mono text-xs font-bold">
@@ -128,7 +128,7 @@ export const KDSView: React.FC = () => {
           <div className="p-3 space-y-3 flex-1 overflow-y-auto max-h-[calc(100vh-14rem)]">
             {preparingOrders.length === 0 ? (
               <div className="py-16 text-center text-slate-600 space-y-1">
-                <p className="text-xs font-medium">Chapa livre.</p>
+                <p className="text-xs font-medium">Nenhum pedido em preparo.</p>
                 <p className="text-[11px]">Inicie o preparo dos pedidos da fila.</p>
               </div>
             ) : (
@@ -161,7 +161,7 @@ export const KDSView: React.FC = () => {
             {readyOrders.length === 0 ? (
               <div className="py-16 text-center text-slate-600 space-y-1">
                 <p className="text-xs font-medium">Nenhum pedido aguardando cliente.</p>
-                <p className="text-[11px]">Marque os pedidos concluídos da chapa.</p>
+                <p className="text-[11px]">Marque os pedidos concluídos do preparo.</p>
               </div>
             ) : (
               readyOrders.map(order => (

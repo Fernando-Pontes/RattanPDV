@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useFoodTruck } from '../../context/FoodTruckContext';
 import { Product, CategoryId, Order } from '../../types';
-import { ProductCustomizeModal } from './ProductCustomizeModal';
 import { CheckoutModal } from './CheckoutModal';
 import { ReceiptModal } from './ReceiptModal';
 import {
@@ -27,6 +26,7 @@ export const PDVView: React.FC = () => {
     cart,
     addToCart,
     updateCartItemQty,
+    updateCartItemNotes,
     removeFromCart,
     clearCart,
     cartSubtotal,
@@ -43,7 +43,6 @@ export const PDVView: React.FC = () => {
 
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [productToCustomize, setProductToCustomize] = useState<Product | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
   const [completedOrderForReceipt, setCompletedOrderForReceipt] = useState<Order | null>(null);
   const [displayLayout, setDisplayLayout] = useState<'menu-card' | 'grid'>('menu-card');
@@ -64,11 +63,7 @@ export const PDVView: React.FC = () => {
 
   const handleProductClick = (product: Product) => {
     if (!product.available) return;
-    if (product.hasCustomizations) {
-      setProductToCustomize(product);
-    } else {
-      addToCart(product, 1);
-    }
+    addToCart(product, 1);
   };
 
   const nextSuggestedNumber = (orders.reduce((max, o) => Math.max(max, o.orderNumber || 0), 40) + 1);
@@ -307,7 +302,7 @@ export const PDVView: React.FC = () => {
                                 }}
                                 className="px-3 py-1 bg-stone-800 hover:bg-[#A91D22] text-white rounded-lg text-xs font-bold transition-colors"
                               >
-                                {product.hasCustomizations ? 'Escolher' : '+ Adicionar'}
+                                + Adicionar
                               </button>
                             </div>
                           </div>
@@ -493,26 +488,28 @@ export const PDVView: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Customizations tags */}
-                {(item.customization?.doneness ||
-                  item.customization?.extras?.length ||
-                  item.customization?.removals?.length ||
-                  item.customization?.notes) && (
-                  <div className="text-[11px] space-y-0.5 text-stone-400 pl-2 border-l border-red-900/60">
-                    {item.customization?.doneness && (
-                      <p className="text-red-300 font-medium">Base: {item.customization.doneness}</p>
-                    )}
-                    {item.customization?.extras?.map(e => (
-                      <p key={e.id} className="text-stone-300">+ {e.name}</p>
-                    ))}
-                    {item.customization?.removals?.map(r => (
-                      <p key={r} className="text-rose-400 font-medium">• {r}</p>
-                    ))}
+                {/* Campo de Observações do Prato */}
+                <div className="pt-0.5">
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      value={item.customization?.notes || ''}
+                      onChange={e => updateCartItemNotes(item.id, e.target.value)}
+                      placeholder="Observação (ex: sem queijo, sem cebola, ponto...)"
+                      className="w-full h-7 px-2.5 pr-6 rounded-lg bg-stone-950/80 border border-stone-800 hover:border-stone-700 focus:border-[#A91D22] text-[11px] text-stone-200 placeholder-stone-500 focus:outline-none focus:bg-stone-900 transition-colors"
+                    />
                     {item.customization?.notes && (
-                      <p className="italic text-stone-400">Obs: {item.customization.notes}</p>
+                      <button
+                        type="button"
+                        onClick={() => updateCartItemNotes(item.id, '')}
+                        title="Limpar observação"
+                        className="absolute right-1.5 text-stone-500 hover:text-stone-300 p-0.5"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
                     )}
                   </div>
-                )}
+                </div>
 
                 {/* Quantity Controls & Remove */}
                 <div className="flex items-center justify-between pt-1">
@@ -583,16 +580,6 @@ export const PDVView: React.FC = () => {
       </section>
 
       {/* Modals */}
-      {productToCustomize && (
-        <ProductCustomizeModal
-          product={productToCustomize}
-          onClose={() => setProductToCustomize(null)}
-          onConfirm={(qty, customization) => {
-            addToCart(productToCustomize, qty, customization);
-          }}
-        />
-      )}
-
       {isCheckoutOpen && (
         <CheckoutModal
           onClose={() => setIsCheckoutOpen(false)}

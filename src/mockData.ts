@@ -37,7 +37,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.esmagatto,
     available: true,
     prepTimeMinutes: 7,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Sem Aioli', 'Sem Rúcula', 'Sem Cebola Confit', 'Sem Queijo'],
     allowedExtras: [
       { id: 'ext-rb-1', name: 'Rosbife da Casa Extra', price: 14.00 },
@@ -55,7 +55,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.esmagatto,
     available: true,
     prepTimeMinutes: 7,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Sem Queijo (Pasta de Ricota)', 'Sem Alface Americana', 'Sem Tomate Seco'],
     allowedExtras: [
       { id: 'ext-pp-1', name: 'Paleta Defumada Extra', price: 14.00 },
@@ -73,7 +73,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.esmagatto,
     available: true,
     prepTimeMinutes: 6,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Sem Salada Coleslaw', 'Sem Maionese da Casa', 'Sem Picles', 'Sem Queijo'],
     allowedExtras: [
       { id: 'ext-cc-1', name: 'Frango Defumado Extra', price: 12.00 },
@@ -90,7 +90,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.esmagatto,
     available: true,
     prepTimeMinutes: 5,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Sem Queijo (Muçarela de Búfala)', 'Sem Queijo (Pasta de Ricota)', 'Sem Tomate Fresco', 'Sem Pesto da Casa'],
     allowedExtras: [
       { id: 'ext-cap-1', name: 'Muçarela de Búfala em Dobro', price: 7.00 },
@@ -107,7 +107,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.esmagatto,
     available: true,
     prepTimeMinutes: 5,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Sem Queijo (Creme de Ricota)', 'Sem Rúcula', 'Sem Alface Americana', 'Sem Cebola Confit', 'Sem Tomate Seco'],
     allowedExtras: [
       { id: 'ext-veg-1', name: 'Creme de Ricota Extra', price: 4.00 },
@@ -124,7 +124,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.esmagatto,
     available: true,
     prepTimeMinutes: 6,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Sem Queijo (Pasta de Ricota)', 'Sem Picles', 'Sem Pesto da Casa'],
     allowedExtras: [
       { id: 'ext-mi-1', name: 'Mortadela Italiana em Dobro', price: 10.00 },
@@ -143,7 +143,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.chips,
     available: true,
     prepTimeMinutes: 3,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Menos Sal', 'Sem Sal'],
     allowedExtras: [
       { id: 'ext-dip-1', name: 'Potinho de Aioli da Casa', price: 3.50 },
@@ -159,7 +159,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.chips,
     available: true,
     prepTimeMinutes: 3,
-    hasCustomizations: true,
+    hasCustomizations: false,
     allowedDoneness: ['Páprica Defumada', 'Lemon Pepper'],
     removableIngredients: ['Menos Sal', 'Tempero Suave'],
     allowedExtras: [
@@ -178,7 +178,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.cinnamonRoll,
     available: true,
     prepTimeMinutes: 4,
-    hasCustomizations: true,
+    hasCustomizations: false,
     allowedDoneness: ['Açúcar e Canela', 'Açúcar e Coco'],
     allowedExtras: [
       { id: 'ext-glace', name: 'Dose Extra de Glacê Real', price: 3.00 },
@@ -196,7 +196,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.cinnamonRoll,
     available: true,
     prepTimeMinutes: 4,
-    hasCustomizations: true,
+    hasCustomizations: false,
     allowedDoneness: ['Açúcar e Canela', 'Açúcar e Coco'],
     allowedExtras: [
       { id: 'ext-geleia', name: 'Geleia de Maçã Extra', price: 4.00 },
@@ -213,7 +213,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.cinnamonRoll,
     available: true,
     prepTimeMinutes: 4,
-    hasCustomizations: true,
+    hasCustomizations: false,
     allowedDoneness: ['Açúcar e Canela', 'Açúcar e Coco'],
     allowedExtras: [
       { id: 'ext-nutella', name: 'Nutella Dobrada', price: 5.00 },
@@ -230,7 +230,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.cinnamonRoll,
     available: true,
     prepTimeMinutes: 4,
-    hasCustomizations: true,
+    hasCustomizations: false,
     allowedDoneness: ['Açúcar e Canela', 'Açúcar e Coco'],
     allowedExtras: [
       { id: 'ext-doce-leite', name: 'Doce de Leite Extra', price: 4.00 },
@@ -247,7 +247,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.box,
     available: true,
     prepTimeMinutes: 6,
-    hasCustomizations: true,
+    hasCustomizations: false,
     allowedDoneness: ['Sabores Sortidos', 'Todos de Nutella', 'Todos de Doce de Leite', 'Personalizado na Comanda'],
   },
 
@@ -261,7 +261,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.coldDrink,
     available: true,
     prepTimeMinutes: 3,
-    hasCustomizations: true,
+    hasCustomizations: false,
     allowedDoneness: [
       'Limão Siciliano' as any,
       'Maçã Verde' as any,
@@ -280,7 +280,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.coldDrink,
     available: true,
     prepTimeMinutes: 2,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Sem Gelo'],
   },
   {
@@ -292,7 +292,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.coldDrink,
     available: true,
     prepTimeMinutes: 2,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Sem Gelo', 'Sem Limão'],
   },
   {
@@ -304,7 +304,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.coldDrink,
     available: true,
     prepTimeMinutes: 2,
-    hasCustomizations: true,
+    hasCustomizations: false,
     allowedDoneness: ['Laranja Integral' as any, 'Uva Integral' as any],
     removableIngredients: ['Sem Gelo'],
   },
@@ -341,7 +341,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.hotCoffee,
     available: true,
     prepTimeMinutes: 2,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Sem Açúcar', 'Adoçante à Parte'],
   },
   {
@@ -353,7 +353,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.hotCoffee,
     available: true,
     prepTimeMinutes: 3,
-    hasCustomizations: true,
+    hasCustomizations: false,
     removableIngredients: ['Sem Açúcar', 'Leite Bem Quente'],
   },
   {
@@ -365,7 +365,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: IMAGES.hotCoffee,
     available: true,
     prepTimeMinutes: 2,
-    hasCustomizations: true,
+    hasCustomizations: false,
     allowedDoneness: ['Camomila' as any, 'Hortelã' as any, 'Frutas Vermelhas' as any],
     removableIngredients: ['Sem Açúcar'],
   },

@@ -63,6 +63,11 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
               <p className="mt-1 text-[11px] font-bold text-slate-800">
                 Cliente: {order.customerName}
               </p>
+              {order.notes && (
+                <p className="mt-1 text-[10px] italic text-slate-700 bg-slate-100 p-1 rounded text-center">
+                  Obs Comanda: {order.notes}
+                </p>
+              )}
             </div>
 
             {/* Items */}

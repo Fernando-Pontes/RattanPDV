@@ -70,6 +70,7 @@ interface FoodTruckContextType {
   setOrderNotes: (notes: string) => void;
   addToCart: (product: Product, quantity?: number, customization?: OrderItem['customization']) => void;
   updateCartItemQty: (itemId: string, delta: number) => void;
+  updateCartItemNotes: (itemId: string, notes: string) => void;
   removeFromCart: (itemId: string) => void;
   clearCart: () => void;
   cartSubtotal: number;
@@ -287,6 +288,24 @@ export const FoodTruckProvider: React.FC<{ children: ReactNode }> = ({ children 
           return { ...item, quantity: newQty, itemTotal: (item.itemTotal / item.quantity) * newQty };
         })
         .filter((i): i is OrderItem => i !== null),
+    );
+  };
+
+  const updateCartItemNotes = (itemId: string, notes: string) => {
+    setCart(prev =>
+      prev.map(item => {
+        if (item.id !== itemId) return item;
+        const trimmed = notes.trim();
+        const currentCustomization = item.customization || {};
+        return {
+          ...item,
+          customization: trimmed
+            ? { ...currentCustomization, notes: trimmed }
+            : (currentCustomization.extras?.length || currentCustomization.doneness || currentCustomization.removals?.length)
+            ? { ...currentCustomization, notes: undefined }
+            : undefined,
+        };
+      }),
     );
   };
 
@@ -610,7 +629,7 @@ export const FoodTruckProvider: React.FC<{ children: ReactNode }> = ({ children 
         customerName, setCustomerName,
         customerPhone, setCustomerPhone,
         orderNotes, setOrderNotes,
-        addToCart, updateCartItemQty, removeFromCart, clearCart,
+        addToCart, updateCartItemQty, updateCartItemNotes, removeFromCart, clearCart,
         cartSubtotal, cartTotal,
         checkoutOrder, updateOrderStatus, callOrder, cancelOrder,
         toggleProductAvailability, updateProductPrice, updateProductImage, addProduct,

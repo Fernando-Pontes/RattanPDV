@@ -149,7 +149,7 @@ export const CashierReportsView: React.FC = () => {
             <span className="text-3xl font-black font-mono text-orange-400 tabular-nums">
               ~{dailySummary.avgPrepMinutes} min
             </span>
-            <p className="text-[11px] text-slate-500 mt-1">Da chapa ao cliente</p>
+            <p className="text-[11px] text-slate-500 mt-1">Do preparo ao cliente</p>
           </div>
         </div>
 
@@ -345,7 +345,7 @@ export const CashierReportsView: React.FC = () => {
                   <td className="py-3 px-4">
                     <span className="text-[11px] font-semibold text-slate-300 capitalize">
                       {order.status === 'queued' && 'Na Fila'}
-                      {order.status === 'preparing' && 'Na Chapa'}
+                      {order.status === 'preparing' && 'Em Preparo'}
                       {order.status === 'ready' && 'Pronto'}
                       {order.status === 'delivered' && 'Entregue'}
                       {order.status === 'cancelled' && 'Cancelado'}
